@@ -1,2 +1,79 @@
-compare vector value lsq solver to loop over pixels
+Vectorize the lsqcurvefit to solve each pixel simultaneously:
 
+http://www.mathworks.com/help/optim/ug/lsqcurvefit.html
+
+Jacobian of the function evaluated at Solution
+For jacobian of matrix function and variables, see:
+http://www.mathworks.com/help/optim/ug/writing-objective-functions.html#brkjub4
+
+------------------------------------------------
+Example Output
+
+>> driver
+
+xdata =
+
+    1.4680
+    3.7640
+    6.0600
+    8.3560
+   10.6520
+   12.9480
+   15.2440
+   17.5400
+   19.8360
+   22.1320
+   24.4280
+   26.7240
+
+                                         Norm of      First-order
+ Iteration  Func-count     f(x)          step          optimality   CG-iterations
+     0          1     5.15411e+09                      5.09e+05
+     1          2     5.10841e+09             10       4.95e+05            0
+     2          3     5.01817e+09             20       4.68e+05            0
+     3          4     4.84223e+09             40       4.17e+05            0
+     4          5     4.50782e+09             80       3.27e+05            0
+     5          6     3.90272e+09            160       2.56e+05            0
+     6          7     2.89052e+09            320       3.43e+05            0
+     7          8     2.11157e+09        310.052       3.11e+05            0
+     8          9     1.58419e+09        263.349        2.9e+05            0
+     9         10     1.25585e+09        209.833       2.64e+05            0
+    10         11     1.05222e+09        165.729       2.82e+05            0
+    11         12     9.23515e+08        131.815       2.16e+05            0
+    12         13     8.40228e+08        105.755       2.23e+05            0
+    13         14     7.83034e+08        87.0919       3.07e+05            0
+    14         15     7.41263e+08        74.0763       2.02e+05            0
+    15         16     7.09744e+08         64.189        2.5e+05            0
+    16         17     6.85225e+08        56.4045       2.97e+05            0
+    17         18     6.65488e+08        50.5314        1.3e+05            0
+    18         19      6.4721e+08         63.529       1.55e+05            0
+    19         20        6.31e+08        45.3145       2.09e+05            0
+    20         21     5.96124e+08        123.297       2.21e+05            0
+    21         22     5.78267e+08        48.1086       2.02e+05            0
+    22         23     5.62469e+08        45.5586       2.26e+05            0
+    23         24     5.38593e+08        101.853       2.63e+05            0
+    24         25     5.13384e+08        115.567       2.62e+05            0
+    25         26     4.90947e+08        113.988       3.27e+05            0
+    26         27     4.80716e+08        39.5222       1.83e+05            0
+    27         28     4.72874e+08        47.6298       1.71e+05            0
+    28         29     4.65117e+08        33.4377       1.97e+05            0
+    29         30     4.34416e+08        232.204       2.84e+05            0
+    30         31     4.27449e+08        69.4176       2.93e+05            0
+    31         32     4.25083e+08         22.922       1.88e+05            0
+    32         33     4.22415e+08        19.4849       1.92e+05            0
+    33         34     4.17464e+08        59.2888       1.76e+05            0
+    34         35     4.15287e+08        18.8583       5.92e+05            0
+    35         36     4.12868e+08        32.0202       4.72e+05            0
+    36         37     4.12642e+08        2.44573       2.37e+05            0
+    37         38       4.105e+08        18.0676       3.41e+05            0
+    38         39     4.00257e+08        152.518       2.06e+05            0
+    39         40     3.97423e+08        48.4308       1.84e+05            0
+    40         41     3.89639e+08        147.942       1.66e+05            0
+
+Solver stopped prematurely.
+
+lsqcurvefit stopped because it exceeded the function evaluation limit,
+options.MaxFunEvals = 40 (the selected value).
+
+Elapsed time is 44.155414 seconds.
+Current plot held
