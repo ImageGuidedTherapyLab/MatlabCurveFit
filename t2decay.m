@@ -11,7 +11,6 @@ Nparam    = 3;
 % build array of model predicted values
 for iii = 1:NumEcho
    echotime = xdata(iii,1);
-   tmp1 = Amplitude .*exp(-echotime./Decay) ;
    ModelVector(:,:,iii) =  Amplitude .*exp(-echotime./Decay) + Offset;
 end
 if nargout > 1   % two output arguments
