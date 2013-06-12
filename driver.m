@@ -1,6 +1,6 @@
 clear all
 close all
-load data.mat
+load data/data.mat
 
 options = optimset('display','iter','jacobian','on','MaxIter',40,'MaxFunEvals',40,'TolFun',1e-6);
 ydata = double(image(50:200,30:250,:));
