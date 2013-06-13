@@ -8,7 +8,7 @@ addpath('algorithms/vector/');
 
 % Load data.
 data = load('data/data.mat');
-ydata = double(data.image(100:120,100:120,:));
+ydata = double(data.image(50:200,30:250,:));
 xdata = data.EchoTime';
 
 % Create pool for parallel processing.
