@@ -31,8 +31,9 @@ fprintf('   pixel-by-pixel, parfor:    % 4.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:  % 4.2f s\n', processingTimeVector);
 
 % Plot results.
+pixel = [60,80];
 figure(1);
-plot(squeeze(ydata(10,10,:)));
+plot(squeeze(ydata(pixel(1),pixel(2),:)));
 hold;
-plot(solutionPixel(1,10,10)* exp(-xdata'/solutionPixel(2,10,10)) + solutionPixel(3,10,10));
-plot(solutionVector(1,10,10)* exp(-xdata'/solutionVector(2,10,10)) + solutionVector(3,10,10));
+plot(solutionPixel(1,pixel(1),pixel(2))* exp(-xdata'/solutionPixel(2,pixel(1),pixel(2))) + solutionPixel(3,pixel(1),pixel(2)));
+plot(solutionVector(1,pixel(1),pixel(2))* exp(-xdata'/solutionVector(2,pixel(1),pixel(2))) + solutionVector(3,pixel(1),pixel(2)));
