@@ -1,6 +1,7 @@
 Starting matlabpool using the 'local' configuration ... connected to 8 labs.
 
 Processing times:
-   pixel-by-pixel, parfor:     141.64 s
-   vector, simultaneous fit:   46.62 s
+   pixel-by-pixel, parfor:                      120.30 s
+   vector, simultaneous fit:                    16.01 s
+   vector chunks, piecewise simultaneous fit:   2.40 s
 
