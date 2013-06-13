@@ -1,3 +1,5 @@
+function pixelFit()
+
 % Reset MATLAB environment.
 clear all
 close all
@@ -39,16 +41,16 @@ upperBounds(3) = 100;
 
 % Loop over pixels.
 parfor i = 1:numberOfPixels
-    
+
     echoTimes = xdata;
     echoData  = ydata(i,:);
-    
+
     x0 = solution(:,i);
 
     [x,resnorm,residual,exitflag, output] = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
-    
+
     solution(:,i) = x(:);
-    
+
 end
 
 % Reshape data to previous format.
@@ -65,3 +67,5 @@ toc;
 plot(squeeze(ydata(10,10,:)))
 hold
 plot(solution(1,10,10)* exp(-EchoTime/solution(2,10,10)) + solution(3,10,10))
+
+end
