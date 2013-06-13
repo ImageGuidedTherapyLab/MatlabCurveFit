@@ -45,7 +45,7 @@ parfor i = 1:numberOfPixels
     
     x0 = solution(:,i);
 
-    [x,resnorm,residual,exitflag, output] = lsqcurvefit( @t2decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+    [x,resnorm,residual,exitflag, output] = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
     
     solution(:,i) = x(:);
     

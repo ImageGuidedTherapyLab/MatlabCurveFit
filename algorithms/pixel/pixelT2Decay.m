@@ -1,4 +1,4 @@
-function [ modelVector, modelJacobian ] = t2decay( solutionParameters, echoTimes )
+function [ modelVector, modelJacobian ] = pixelT2Decay( solutionParameters, echoTimes )
 
     % Get number of echo.
     numberOfEchos = size(echoTimes,1);
