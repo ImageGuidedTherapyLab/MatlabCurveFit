@@ -4,23 +4,23 @@ function [ModelVector,ModelJacobian] = vectorT2Decay(Solution,xdata)
     NumEcho = size(xdata,1);
 
     % objective function values at Solution
-    ModelVector = zeros(size(Solution,2),size(Solution,3),NumEcho);
+    ModelVector = zeros(size(Solution,2),NumEcho);
 
     % extract model parameters individually
-    Amplitude = Solution(1,:,:);
-    Decay     = Solution(2,:,:);
+    Amplitude = Solution(1,:);
+    Decay     = Solution(2,:);
     Nparam    = 2; 
 
     % build array of model predicted values
     for iii = 1:NumEcho
         echotime = xdata(iii,1);
-        ModelVector(:,:,iii) =  Amplitude .* exp(-echotime./Decay);
+        ModelVector(:,iii) =  Amplitude .* exp(-echotime./Decay);
     end
     
     if nargout > 1   % two output arguments
         
-        NumberRowsPerEcho = size(Solution,2) * size(Solution,3);
-        NumberRowsTotal   = size(Solution,2) * size(Solution,3) * size(xdata,1);
+        NumberRowsPerEcho = size(Solution,2);
+        NumberRowsTotal   = size(Solution,2) * size(xdata,1);
    
         % allocate dense matrix for derivative
         DerivativeMatrix = zeros(NumberRowsTotal,Nparam);
@@ -36,7 +36,7 @@ function [ModelVector,ModelJacobian] = vectorT2Decay(Solution,xdata)
         end
         
         % create sparse uncouple matrix
-        [NotUsed,SparseRow] = meshgrid([1:Nparam],[1:NumberRowsTotal]);
+        [~,SparseRow] = meshgrid([1:Nparam],[1:NumberRowsTotal]);
         TmpCol = reshape([1:Nparam*NumberRowsPerEcho],Nparam,NumberRowsPerEcho)';
         SparseCol = repmat(TmpCol,NumEcho,1);
         ModelJacobian = sparse(SparseRow(:),SparseCol(:),DerivativeMatrix(:),NumberRowsTotal,Nparam*NumberRowsPerEcho);
