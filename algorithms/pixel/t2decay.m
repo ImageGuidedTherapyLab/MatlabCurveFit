@@ -1,46 +1,34 @@
-function [ModelVector,ModelJacobian] = t2decay(Solution,xdata)
+function [ modelVector, modelJacobian ] = t2decay( solutionParameters, echoTimes )
 
-    % get number of echo
-    NumEcho = size(xdata,1);
-
-    % objective function values at Solution
-    ModelVector = zeros(1,NumEcho);
-
-    % extract model parameters individually
-    Amplitude = Solution(1);
-    Decay     = Solution(2);
-    Offset    = Solution(3);
-    Nparam    = 3; 
-
-    % build array of model predicted values
-    for iii = 1:NumEcho
-        echotime = xdata(iii);
-        ModelVector(iii) =  Amplitude * exp(-echotime / Decay) + Offset;
-    end
+    % Get number of echo.
+    numberOfEchos = size(echoTimes,1);
     
-    if nargout > 1   % two output arguments
-        NumberRowsPerEcho = 1;
-        NumberRowsTotal   = NumEcho;
+    % Transpose echo times vector.
+    echoTimes = echoTimes';
+
+    % Extract model parameters.
+    numberOfParameters = size(solutionParameters,1);
+    amplitude = solutionParameters(1);
+    decayTime     = solutionParameters(2);
+    offset    = solutionParameters(3);
+
+    % Build array of model predicted values.
+    modelVector = amplitude * exp(-echoTimes / decayTime) + offset;
+    
+    % Calculate Jacobian matrix.
+    if nargout > 1
         
-        % allocate dense matrix for derivative
-        DerivativeMatrix = zeros(NumberRowsTotal,3);
-   
-        % Jacobian of the function evaluated at Solution
-        % For jacobian of matrix function and variables, see:
-        % http://www.mathworks.com/help/optim/ug/writing-objective-functions.html#brkjub4
-        for iii = 1:size(xdata,1)
-            echotime = xdata(iii);
-            AmplitudePartialDerivative = exp(-echotime/Decay);
-            DecayPartialDerivative     = Amplitude * exp(-echotime/Decay) * (echotime/Decay^2);
-            OffsetPartialDerivative    = 1;
-            DerivativeMatrix(iii,:) = [AmplitudePartialDerivative, DecayPartialDerivative, OffsetPartialDerivative ];
-        end
+        % Jacobian of the function evaluated for solution parameters.
+        amplitudePartialDerivatives = exp(-echoTimes ./ decayTime);
+        decayPartialDerivatives     = amplitude * exp(-echoTimes ./ decayTime) .* (echoTimes ./ decayTime^2);
+        offsetPartialDerivatives    = ones(1,numberOfEchos);
+        derivativeMatrix = [ amplitudePartialDerivatives decayPartialDerivatives offsetPartialDerivatives ];
         
         % Create sparse uncouple matrix
-        [NotUsed,SparseRow] = meshgrid([1:Nparam],[1:NumberRowsTotal]);
-        TmpCol = 1:Nparam;
-        SparseCol = repmat(TmpCol,NumEcho,1);
-        ModelJacobian = sparse(SparseRow(:),SparseCol(:),DerivativeMatrix(:),NumberRowsTotal,Nparam);
+        [~, sparseRow] = meshgrid(1:numberOfParameters, 1:numberOfEchos);
+        sparseCol = repmat( 1:numberOfParameters, numberOfEchos, 1 );
+        modelJacobian = sparse( sparseRow(:), sparseCol(:), derivativeMatrix(:), numberOfEchos, numberOfParameters );
+        
     end
     
 end

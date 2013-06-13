@@ -29,7 +29,7 @@ solution = rand(3, numberOfPixels);
 lowerBounds(1) = 0;
 upperBounds(1) = 200;
 
-% Bounds for decay
+% Bounds for T2 time
 lowerBounds(2) = 0;
 upperBounds(2) = 60;
 
