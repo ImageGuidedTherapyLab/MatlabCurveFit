@@ -35,5 +35,5 @@ pixel = [60,80];
 figure(1);
 plot(squeeze(ydata(pixel(1),pixel(2),:)));
 hold;
-plot(solutionPixel(1,pixel(1),pixel(2))* exp(-xdata'/solutionPixel(2,pixel(1),pixel(2))) + solutionPixel(3,pixel(1),pixel(2)));
+plot(solutionPixel(1,pixel(1),pixel(2))* exp(-xdata'/solutionPixel(2,pixel(1),pixel(2))));
 plot(solutionVector(1,pixel(1),pixel(2))* exp(-xdata'/solutionVector(2,pixel(1),pixel(2))) + solutionVector(3,pixel(1),pixel(2)));

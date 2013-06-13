@@ -9,11 +9,10 @@ function [ modelVector, modelJacobian ] = pixelT2Decay( solutionParameters, echo
     % Extract model parameters.
     numberOfParameters = size(solutionParameters,1);
     amplitude = solutionParameters(1);
-    decayTime     = solutionParameters(2);
-    offset    = solutionParameters(3);
+    decayTime = solutionParameters(2);
 
     % Build array of model predicted values.
-    modelVector = amplitude * exp(-echoTimes / decayTime) + offset;
+    modelVector = amplitude * exp(-echoTimes / decayTime);
     
     % Calculate Jacobian matrix.
     if nargout > 1
@@ -21,13 +20,12 @@ function [ modelVector, modelJacobian ] = pixelT2Decay( solutionParameters, echo
         % Jacobian of the function evaluated for solution parameters.
         amplitudePartialDerivatives = exp(-echoTimes ./ decayTime);
         decayPartialDerivatives     = amplitude * exp(-echoTimes ./ decayTime) .* (echoTimes ./ decayTime^2);
-        offsetPartialDerivatives    = ones(1,numberOfEchos);
-        derivativeMatrix = [ amplitudePartialDerivatives decayPartialDerivatives offsetPartialDerivatives ];
+        derivativeMatrix = [ amplitudePartialDerivatives decayPartialDerivatives ];
         
         % Create sparse uncouple matrix
         [~, sparseRow] = meshgrid(1:numberOfParameters, 1:numberOfEchos);
-        sparseCol = repmat( 1:numberOfParameters, numberOfEchos, 1 );
-        modelJacobian = sparse( sparseRow(:), sparseCol(:), derivativeMatrix(:), numberOfEchos, numberOfParameters );
+        sparseCol = repmat(1:numberOfParameters, numberOfEchos, 1);
+        modelJacobian = sparse(sparseRow(:), sparseCol(:), derivativeMatrix(:), numberOfEchos, numberOfParameters);
         
     end
     
