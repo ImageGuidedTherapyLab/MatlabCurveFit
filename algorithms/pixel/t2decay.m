@@ -36,11 +36,11 @@ function [ModelVector,ModelJacobian] = t2decay(Solution,xdata)
             DerivativeMatrix(iii,:) = [AmplitudePartialDerivative, DecayPartialDerivative, OffsetPartialDerivative ];
         end
         
-        % create sparse uncouple matrix
+        % Create sparse uncouple matrix
         [NotUsed,SparseRow] = meshgrid([1:Nparam],[1:NumberRowsTotal]);
-        TmpCol = reshape([1:Nparam*NumberRowsPerEcho],Nparam,NumberRowsPerEcho)';
+        TmpCol = 1:Nparam;
         SparseCol = repmat(TmpCol,NumEcho,1);
-        ModelJacobian = sparse(SparseRow(:),SparseCol(:),DerivativeMatrix(:),NumberRowsTotal,Nparam*NumberRowsPerEcho);
+        ModelJacobian = sparse(SparseRow(:),SparseCol(:),DerivativeMatrix(:),NumberRowsTotal,Nparam);
     end
     
 end
