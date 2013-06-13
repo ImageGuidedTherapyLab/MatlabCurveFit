@@ -5,6 +5,7 @@ close all;
 % Add algorithms.
 addpath('algorithms/pixel/');
 addpath('algorithms/vector/');
+addpath('algorithms/vectorChunks/');
 
 % Load data.
 data = load('data/data.mat');
@@ -26,9 +27,16 @@ tic();
 solutionVector = vectorFit(xdata, ydata);
 processingTimeVector = toc();
 
+% Vector chunks curve fit.
+tic();
+solutionVectorChunks = vectorChunksFit(xdata, ydata);
+processingTimeVectorChunks = toc();
+
 fprintf('Processing times:\n');
-fprintf('   pixel-by-pixel, parfor:    % 4.2f s\n', processingTimePixel);
-fprintf('   vector, simultaneous fit:  % 4.2f s\n', processingTimeVector);
+fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
+fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
+fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
+
 
 % Plot results.
 pixel = [60,80];
@@ -37,3 +45,4 @@ plot(squeeze(ydata(pixel(1),pixel(2),:)));
 hold;
 plot(solutionPixel(1,pixel(1),pixel(2))* exp(-xdata'/solutionPixel(2,pixel(1),pixel(2))));
 plot(solutionVector(1,pixel(1),pixel(2))* exp(-xdata'/solutionVector(2,pixel(1),pixel(2))));
+plot(solutionVectorChunks(1,pixel(1),pixel(2))* exp(-xdata'/solutionVectorChunks(2,pixel(1),pixel(2))));
