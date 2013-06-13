@@ -1,3 +1,5 @@
+function solution = vectorFit(xdata, ydata)
+
 clear all
 close all
 load ../../data/data.mat
@@ -25,3 +27,5 @@ toc
 plot(squeeze(ydata(60,80,:)))
 hold
 plot(x(1,60,80)* exp(-EchoTime./x(2,60,80)) + x(3,60,80))
+
+end
