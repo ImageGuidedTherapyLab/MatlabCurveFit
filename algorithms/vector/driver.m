@@ -17,7 +17,7 @@ UB(2,:,:) =  60 * UB(2,:,:) ;
 UB(3,:,:) = 100 * UB(3,:,:) ;
 LB =  zeros(3,size(ydata,1),size(ydata,2));
 tic
-[x,resnorm,residual,exitflag, output]=lsqcurvefit(@t2decay,x0,xdata,ydata,LB,UB,options);
+[x,resnorm,residual,exitflag, output]=lsqcurvefit(@vectorT2Decay,x0,xdata,ydata,LB,UB,options);
 toc
 %[x,resnorm,residual,exitflag, output]=lsqcurvefit(@t2decay,x0,xdata,ydata);
 

@@ -1,4 +1,4 @@
-function [ModelVector,ModelJacobian] = t2decay(Solution,xdata)
+function [ModelVector,ModelJacobian] = vectorT2Decay(Solution,xdata)
 % get number of echo
 NumEcho = size(xdata,1);
 % objective function values at Solution
