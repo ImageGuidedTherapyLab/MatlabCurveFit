@@ -1,3 +1,6 @@
+% Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
+% Authors: David Fuentes, Florian Maier
+
 function [ modelVector, modelJacobian ] = pixelT2Decay( solutionParameters, echoTimes )
 
     % Get number of echo.
