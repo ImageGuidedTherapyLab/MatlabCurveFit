@@ -27,10 +27,7 @@ function solution = pixelFit(xdata, ydata)
         echoData  = ydata(i,:);
 
         x0 = solution(:,i);
-
-        [x,resnorm,residual,exitflag, output] = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
-
-        solution(:,i) = x;
+        solution(:,i) = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
 
     end
 
