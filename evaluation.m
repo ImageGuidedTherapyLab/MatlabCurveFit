@@ -15,15 +15,16 @@ if matlabpool('size') == 0
     matlabpool('open');
 end
 
-% Start timing.
-tic;
-
+% Pixel-by-pixel curve fit.
+tic();
 solution = pixelFit(xdata, ydata);
+processingTimePixel = toc();
 
-% Stop timing.
-toc;
+fprintf('Processing times:\n');
+fprintf('   pixel-by-pixel, parfor: %.2f s\n', processingTimePixel);
 
 % Plot results.
-plot(squeeze(ydata(10,10,:)))
-hold
-plot(solution(1,10,10)* exp(-xdata'/solution(2,10,10)) + solution(3,10,10))
+figure(1);
+plot(squeeze(ydata(10,10,:)));
+hold;
+plot(solution(1,10,10)* exp(-xdata'/solution(2,10,10)) + solution(3,10,10));
