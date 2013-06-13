@@ -1,7 +1,7 @@
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
 
-function solution = pixelFit(xdata, ydata)
+function solution = pixelFit(xdata, ydata, mode)
 
     % Set options for fit.
     options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 40, 'MaxFunEvals', 40, 'TolFun', 1e-3 );
@@ -30,7 +30,13 @@ function solution = pixelFit(xdata, ydata)
         echoData  = ydata(i,:);
 
         x0 = solution(:,i);
-        solution(:,i) = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+        
+        switch(mode)
+            case 'T1'
+                solution(:,i) = lsqcurvefit( @pixelT1Recovery, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+            case 'T2'
+                solution(:,i) = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+        end
 
     end
 
