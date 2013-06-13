@@ -1,71 +1,44 @@
-function pixelFit()
+function solution = pixelFit(xdata, ydata)
 
-% Reset MATLAB environment.
-clear all
-close all
+    % Set options for fit.
+    options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 40, 'MaxFunEvals', 40, 'TolFun', 1e-6 );
 
-% Start timing.
-tic;
+    % Get size of data.
+    dataSize = size(ydata);
+    numberOfPixels = dataSize(1)*dataSize(2);
+    numberOfEchos  = dataSize(3);
 
-% Load data.
-load('../../data/data.mat');
-ydata = double(image(100:120,100:120,:));
-xdata = EchoTime';
+    % Reshape to avoid nested for-loops.
+    ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
+    solution = rand(3, numberOfPixels);
 
-% Set options for fit.
-options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 40, 'MaxFunEvals', 40, 'TolFun', 1e-6 );
+    % Bounds for amplitude
+    lowerBounds(1) = 0;
+    upperBounds(1) = 200;
 
-% Create pool for parallel processing.
-matlabpool open;
+    % Bounds for T2 time
+    lowerBounds(2) = 0;
+    upperBounds(2) = 60;
 
-% Get size of data.
-dataSize = size(ydata);
-numberOfPixels = dataSize(1)*dataSize(2);
-numberOfEchos  = dataSize(3);
+    % Bounds for offset
+    lowerBounds(3) = 0;
+    upperBounds(3) = 100;
 
-% Reshape to avoid nested for-loops.
-ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
-solution = rand(3, numberOfPixels);
+    % Loop over pixels.
+    parfor i = 1:numberOfPixels
 
-% Bounds for amplitude
-lowerBounds(1) = 0;
-upperBounds(1) = 200;
+        echoTimes = xdata;
+        echoData  = ydata(i,:);
 
-% Bounds for T2 time
-lowerBounds(2) = 0;
-upperBounds(2) = 60;
+        x0 = solution(:,i);
 
-% Bounds for offset
-lowerBounds(3) = 0;
-upperBounds(3) = 100;
+        [x,resnorm,residual,exitflag, output] = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
 
-% Loop over pixels.
-parfor i = 1:numberOfPixels
+        solution(:,i) = x(:);
 
-    echoTimes = xdata;
-    echoData  = ydata(i,:);
+    end
 
-    x0 = solution(:,i);
-
-    [x,resnorm,residual,exitflag, output] = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
-
-    solution(:,i) = x(:);
-
-end
-
-% Reshape data to previous format.
-ydata = reshape(ydata, dataSize);
-solution = reshape(solution, [3, dataSize(1), dataSize(2)]);
-
-% Close MATLAB pool
-matlabpool close;
-
-% Stop timing.
-toc;
-
-% Plot results.
-plot(squeeze(ydata(10,10,:)))
-hold
-plot(solution(1,10,10)* exp(-EchoTime/solution(2,10,10)) + solution(3,10,10))
+    % Reshape solution to format of ydata.
+    solution = reshape(solution, [3, dataSize(1), dataSize(2)]);
 
 end
