@@ -1,7 +1,7 @@
 %% Parallel pixelwise fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-function solution = pixelFit(xdata, ydata, objectiveFunction, solution)
+function solution = pixelFit(xdata, ydata, objectiveFunction, solution, bounds)
 
     % Set options for fit.
     options = optimset('display', 'off', 'jacobian', 'on' );
@@ -14,13 +14,11 @@ function solution = pixelFit(xdata, ydata, objectiveFunction, solution)
     % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
 
-    % Bounds for amplitude
-    lowerBounds(1) = 0;
-    upperBounds(1) = 4096;
-
-    % Bounds for T1 time
-    lowerBounds(2) = 0;
-    upperBounds(2) = 5000;
+    % Bounds.
+    lowerBounds(1) = bounds(1,1);
+    upperBounds(1) = bounds(1,2);
+    lowerBounds(2) = bounds(2,1);
+    upperBounds(2) = bounds(2,2);
 
     % Loop over pixels.
     parfor i = 1:numberOfPixels

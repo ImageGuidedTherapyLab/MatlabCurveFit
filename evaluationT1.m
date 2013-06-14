@@ -31,19 +31,22 @@ initialAmplitude  = reshape(initialAmplitude, [1, numberOfPixels]);
 initialT1 = reshape(initialT1, [1, numberOfPixels]);
 initalGuess = [ initialAmplitude; initialT1 ];
 
+% Define bounds.
+bounds = [ 0, 4096; 0, 5000 ];
+
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
+solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
+solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');

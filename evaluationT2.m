@@ -26,19 +26,22 @@ dataSize = size(ydata);
 numberOfPixels = dataSize(1)*dataSize(2);
 initialGuess = ones(2, numberOfPixels);
 
+% Define bounds.
+bounds = [ 0, 4096; 0, 2500 ];
+
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
+solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
+solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
