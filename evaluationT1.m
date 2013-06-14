@@ -42,4 +42,4 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-%plotDecay(60,80,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks,'T1');
+plotRecovery(10,30,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
