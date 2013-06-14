@@ -29,26 +29,38 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
     % Calculate Jacobian matrix.
     if nargout > 1
         
-        numberOfRows = numberOfPixels * numberOfInversionTimes;
-   
-        % Allocate dense matrix for derivative
-        derivativeMatrix = zeros(numberOfRows, numberOfParameters);
-   
-        % Jacobian of the function evaluated at Solution
-        % For jacobian of matrix function and variables, see:
-        % http://www.mathworks.com/help/optim/ug/writing-objective-functions.html#brkjub4
-        for i = 1:numberOfInversionTimes
-            inversionTime = inversionTimes(i);
-            amplitudePartialDerivative = abs(1 - 2.*exp(-inversionTime ./ t1Times));
-            t1PartialDerivative        = sign(1 - 2.*exp(-inversionTime ./ t1Times)) .* amplitudes .* (1 - 2.*exp(-inversionTime ./ t1Times)) .* (-2.*exp(-inversionTime ./ t1Times)) .* (inversionTime ./ t1Times.^2);
-            derivativeMatrix( ((i-1)*numberOfPixels+1):i*numberOfPixels,:) = [ amplitudePartialDerivative', t1PartialDerivative' ];
+        % Initialize Jacobian of the function.
+        modelJacobian = sparse([], [], [], numberOfPixels*numberOfInversionTimes, numberOfPixels*numberOfParameters, numberOfPixels*numberOfInversionTimes*numberOfParameters);
+
+        for pixelIndex = 1:numberOfPixels
+            
+            for inversionIndex = 1:numberOfInversionTimes
+                
+                % Index of function components that will be evaluated. The
+                % number of function components is the number of pixels
+                % times the number of different inversion times.
+                dataIndex = (inversionIndex-1)*numberOfPixels + pixelIndex;
+                
+                % Index of derivative variables. The number of derivative
+                % variables are the number of pixels times the number of
+                % fitting parameters. For each function component only one
+                % pixel needs to be evaluated. Therefore, the number of
+                % calculated derivatives per column equals the number of
+                % fitting parameters.
+                
+                % Parameter 1: Amplitude
+                parameterIndex = 1;
+                funcIndex = (pixelIndex-1)*numberOfParameters + parameterIndex;
+                modelJacobian(dataIndex, funcIndex) = abs(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex)));
+                
+                % Parameter 2: T1
+                parameterIndex = 2;
+                funcIndex = (pixelIndex-1)*numberOfParameters + parameterIndex;
+                modelJacobian(dataIndex, funcIndex) = sign(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * amplitudes(pixelIndex) * (1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (-2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (inversionTimes(inversionIndex) / t1Times(pixelIndex)^2);
+                
+            end
+            
         end
-        
-        % create sparse uncouple matrix
-        [~,sparseRow] = meshgrid(1:numberOfParameters, 1:numberOfRows);
-        tmpCol = reshape(1:(numberOfParameters*numberOfPixels),numberOfPixels,numberOfParameters);
-        sparseCol = repmat(tmpCol,numberOfInversionTimes,1);
-        modelJacobian = sparse(sparseRow(:),sparseCol(:),derivativeMatrix(:),numberOfRows,numberOfParameters*numberOfPixels);
         
     end
 
