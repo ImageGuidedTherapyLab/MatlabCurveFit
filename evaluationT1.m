@@ -26,9 +26,9 @@ solutionPixel = pixelFit(xdata, ydata, 'T1');
 processingTimePixel = toc();
 
 % Vector curve fit.
-%tic();
-%solutionVector = vectorFit(xdata, ydata, 'T1');
-%processingTimeVector = toc();
+tic();
+solutionVector = vectorFit(xdata, ydata, 'T1');
+processingTimeVector = toc();
 
 % Vector chunks curve fit.
 %tic();
@@ -37,7 +37,7 @@ processingTimePixel = toc();
 
 fprintf('Processing times:\n');
 fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
-%fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
+fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
 %fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
 
 

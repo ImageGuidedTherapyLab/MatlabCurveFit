@@ -3,7 +3,7 @@
 
 function [ modelVector, modelJacobian ] = pixelT1Recovery( solutionParameters, inversionTimes )
 
-    % Get number of echo.
+    % Get number of inversion times.
     numberOfInversionTimes = size(inversionTimes,1);
     
     % Reshape inversion times vector.

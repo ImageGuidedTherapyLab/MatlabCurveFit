@@ -19,9 +19,9 @@ function solution = pixelFit(xdata, ydata, mode)
     lowerBounds(1) = 0;
     upperBounds(1) = 4096;
 
-    % Bounds for T2 time
+    % Bounds for T1 time
     lowerBounds(2) = 0;
-    upperBounds(2) = 1500;
+    upperBounds(2) = 5000;
 
     % Loop over pixels.
     parfor i = 1:numberOfPixels
