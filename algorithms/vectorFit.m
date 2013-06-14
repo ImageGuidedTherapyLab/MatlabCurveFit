@@ -1,6 +1,6 @@
+%% Full vector fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-
 function solution = vectorFit(xdata, ydata, mode)
 
     % Set options for fit.

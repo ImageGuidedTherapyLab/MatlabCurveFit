@@ -1,6 +1,6 @@
+%% Parallel pixelwise fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-
 function solution = pixelFit(xdata, ydata, mode)
 
     % Set options for fit.
@@ -17,7 +17,7 @@ function solution = pixelFit(xdata, ydata, mode)
             initialAmplitude  = max(ydata,[],3);
             [~,minimaIndices] = min(ydata,[],3);
             initialT1         = xdata(minimaIndices);
-            initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
+            initialAmplitude  = reshape(initialAmplitude, [1, numberOfPixels]);
             initialT1 = reshape(initialT1, [1, numberOfPixels]);
             solution = [ initialAmplitude; initialT1 ];
         case 'T2'

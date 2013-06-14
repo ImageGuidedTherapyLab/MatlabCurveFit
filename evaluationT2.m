@@ -1,3 +1,4 @@
+%% Evaluation script, T2 decay fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
 
@@ -5,14 +6,13 @@
 clear all;
 close all;
 
-% Add algorithms.
+% Add paths.
+addpath('tools/');
+addpath('algorithms/');
 addpath('algorithms/objectiveFunctions/');
-addpath('algorithms/pixel/');
-addpath('algorithms/vector/');
-addpath('algorithms/vectorChunks/');
 
 % Load data.
-data = load('data/data.mat');
+data = load('data/dataT2.mat');
 ydata = double(data.image(50:200,30:250,:));
 xdata = data.EchoTime';
 
