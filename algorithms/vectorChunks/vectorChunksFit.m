@@ -53,7 +53,7 @@ function solution = vectorChunksFit(xdata, ydata, mode)
          % Fitting.
          switch (mode)
              case 'T1'
-                solutionChunk{thread} = lsqcurvefit(@vectorT1Recovery, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
+                solutionChunk{thread} = lsqcurvefit(@objectiveFunctionT1, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
              case 'T2'
                 solutionChunk{thread} = lsqcurvefit(@vectorT2Decay, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
          end

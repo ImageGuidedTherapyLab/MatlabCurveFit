@@ -36,7 +36,7 @@ function solution = vectorFit(xdata, ydata, mode)
     % Fitting.
     switch (mode)
         case 'T1'
-            solution = lsqcurvefit(@vectorT1Recovery, solution, xdata, ydata, lowerBounds, upperBounds, options);
+            solution = lsqcurvefit(@objectiveFunctionT1, solution, xdata, ydata, lowerBounds, upperBounds, options);
         case 'T2'
             solution = lsqcurvefit(@vectorT2Decay, solution, xdata, ydata, lowerBounds, upperBounds, options);
     end

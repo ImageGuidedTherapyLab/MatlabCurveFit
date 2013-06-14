@@ -1,7 +1,7 @@
+%% Objective function for lsqcurvefit modeling T1 recovery.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-
-function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, inversionTimes )
+function [ modelVector, modelJacobian ] = objectiveFunctionT1( solutionParameters, inversionTimes )
 
     %% Initialize.
     % Get number of inversion times, parameters, and pixels.
