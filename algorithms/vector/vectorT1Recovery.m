@@ -7,7 +7,7 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
     numberOfInversionTimes = size(inversionTimes,1);
 
     % Reshape inversion times vector.
-    inversionTimes = reshape(inversionTimes, [1,numberOfInversionTimes]);
+    inversionTimes = reshape(inversionTimes, [numberOfInversionTimes,1]);
 
     % Get number of pixels.
     numberOfPixels = size(solutionParameters,2);
@@ -41,7 +41,7 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
             inversionTime = inversionTimes(i);
             amplitudePartialDerivative = abs(1 - 2.*exp(-inversionTime ./ t1Times));
             t1PartialDerivative        = sign(1 - 2.*exp(-inversionTime ./ t1Times)) .* amplitudes .* (1 - 2.*exp(-inversionTime ./ t1Times)) .* (-2.*exp(-inversionTime ./ t1Times)) .* (inversionTime ./ t1Times.^2);
-            derivativeMatrix( ((i-1)*numberOfPixels+1):i*numberOfPixels,:) = [ amplitudePartialDerivative; t1PartialDerivative ]';
+            derivativeMatrix( ((i-1)*numberOfPixels+1):i*numberOfPixels,:) = [ amplitudePartialDerivative', t1PartialDerivative' ];
         end
         
         % create sparse uncouple matrix

@@ -4,23 +4,28 @@
 function solution = vectorFit(xdata, ydata, mode)
 
     % Set options for fit.
-    options = optimset('display', 'iter', 'jacobian', 'on', 'MaxIter', 100, 'MaxFunEvals', 100, 'TolFun', 1e-7);
+    options = optimset('display', 'iter', 'jacobian', 'on');
     
     % Get size of data.
     dataSize = size(ydata);
     numberOfPixels = dataSize(1)*dataSize(2);
     numberOfEchos  = dataSize(3);
     
-    % Guess inital parameters.
-    initialAmplitude  = max(ydata,[],3);
-    [~,minimaIndices] = min(ydata,[],3);
-    initialT1         = xdata(minimaIndices);
-
+    switch (mode)
+        case 'T1'
+            % Guess inital parameters.
+            initialAmplitude  = max(ydata,[],3);
+            [~,minimaIndices] = min(ydata,[],3);
+            initialT1         = xdata(minimaIndices);
+            initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
+            initialT1 = reshape(initialT1, [1, numberOfPixels]);
+            solution = [ initialAmplitude; initialT1 ];
+        case 'T2'
+            solution = ones(2, numberOfPixels);
+    end
+            
     % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
-    initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
-    initialT1 = reshape(initialT1, [1, numberOfPixels]);
-    solution = [ initialAmplitude; initialT1 ];
 
     % Bounds.
     upperBounds = ones(2, numberOfPixels);
