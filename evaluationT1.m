@@ -13,7 +13,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT1.mat');
-ydata = double(data.images(100:150,130:150,:));
+ydata = double(data.images(100:110,130:140,:));
 xdata = double(data.inversionTimes);
 
 % Create pool for parallel processing.
@@ -21,19 +21,29 @@ if matlabpool('size') == 0
     matlabpool('open');
 end
 
+% Inital guess for solution.
+dataSize = size(ydata);
+numberOfPixels = dataSize(1)*dataSize(2);
+initialAmplitude  = max(ydata,[],3);
+[~,minimaIndices] = min(ydata,[],3);
+initialT1         = xdata(minimaIndices);
+initialAmplitude  = reshape(initialAmplitude, [1, numberOfPixels]);
+initialT1 = reshape(initialT1, [1, numberOfPixels]);
+initalGuess = [ initialAmplitude; initialT1 ];
+
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, 'T1');
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata, 'T1');
+solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata, 'T1');
+solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1, initalGuess);
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
@@ -43,4 +53,4 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-plotRecovery(10,10,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotRecovery(5,5,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);

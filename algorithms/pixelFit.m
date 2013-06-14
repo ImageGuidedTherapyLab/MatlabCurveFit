@@ -1,7 +1,7 @@
 %% Parallel pixelwise fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-function solution = pixelFit(xdata, ydata, mode)
+function solution = pixelFit(xdata, ydata, objectiveFunction, solution)
 
     % Set options for fit.
     options = optimset('display', 'off', 'jacobian', 'on' );
@@ -10,20 +10,7 @@ function solution = pixelFit(xdata, ydata, mode)
     dataSize = size(ydata);
     numberOfPixels = dataSize(1)*dataSize(2);
     numberOfEchos  = dataSize(3);
-
-    switch (mode)
-        case 'T1'
-            % Guess inital parameters.
-            initialAmplitude  = max(ydata,[],3);
-            [~,minimaIndices] = min(ydata,[],3);
-            initialT1         = xdata(minimaIndices);
-            initialAmplitude  = reshape(initialAmplitude, [1, numberOfPixels]);
-            initialT1 = reshape(initialT1, [1, numberOfPixels]);
-            solution = [ initialAmplitude; initialT1 ];
-        case 'T2'
-            solution = ones(2, numberOfPixels);
-    end
-            
+        
     % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
 
@@ -43,13 +30,9 @@ function solution = pixelFit(xdata, ydata, mode)
 
         x0 = solution(:,i);
         
-        switch(mode)
-            case 'T1'
-                solution(:,i) = lsqcurvefit( @objectiveFunctionT1, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
-            case 'T2'
-                solution(:,i) = lsqcurvefit( @objectiveFunctionT2, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
-        end
-
+        % Fitting.
+        solution(:,i) = lsqcurvefit(objectiveFunction, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+ 
     end
 
     % Reshape solution to format of ydata.

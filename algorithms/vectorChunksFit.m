@@ -1,7 +1,7 @@
 %% Parallel piecewise vector fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
-function solution = vectorChunksFit(xdata, ydata, mode)
+function solution = vectorChunksFit(xdata, ydata, objectiveFunction, solution)
 
     % Set options for fit.
     options = optimset('display', 'off', 'jacobian', 'on');
@@ -11,19 +11,6 @@ function solution = vectorChunksFit(xdata, ydata, mode)
     numberOfPixels = dataSize(1)*dataSize(2);
     numberOfEchos  = dataSize(3);
 
-    switch (mode)
-        case 'T1'
-            % Guess inital parameters.
-            initialAmplitude  = max(ydata,[],3);
-            [~,minimaIndices] = min(ydata,[],3);
-            initialT1         = xdata(minimaIndices);
-            initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
-            initialT1 = reshape(initialT1, [1, numberOfPixels]);
-            solution = [ initialAmplitude; initialT1 ];
-        case 'T2'
-            solution = ones(2, numberOfPixels);
-    end
-            
     % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
 
@@ -50,13 +37,9 @@ function solution = vectorChunksFit(xdata, ydata, mode)
         upperBoundsChunk{thread} = upperBounds(:,firstPixel:lastPixel);
         solutionChunk{thread} = solution(:,firstPixel:lastPixel);
         
-         % Fitting.
-         switch (mode)
-             case 'T1'
-                solutionChunk{thread} = lsqcurvefit(@objectiveFunctionT1, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
-             case 'T2'
-                solutionChunk{thread} = lsqcurvefit(@objectiveFunctionT2, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
-         end
+        % Fitting.
+        solutionChunk{thread} = lsqcurvefit(objectiveFunction, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
+
     end
     
     % Combine results.

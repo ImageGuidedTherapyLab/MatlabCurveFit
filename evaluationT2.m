@@ -13,7 +13,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT2.mat');
-ydata = double(data.image(50:200,30:250,:));
+ydata = double(data.image(50:60,30:40,:));
 xdata = data.EchoTime';
 
 % Create pool for parallel processing.
@@ -21,19 +21,24 @@ if matlabpool('size') == 0
     matlabpool('open');
 end
 
+% Initial guess for solution.
+dataSize = size(ydata);
+numberOfPixels = dataSize(1)*dataSize(2);
+initialGuess = ones(2, numberOfPixels);
+
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, 'T2');
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata, 'T2');
+solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata, 'T2');
+solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initialGuess);
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
@@ -43,4 +48,4 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-plotDecay(60,80,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotDecay(5,5,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
