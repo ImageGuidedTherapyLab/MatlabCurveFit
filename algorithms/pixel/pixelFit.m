@@ -47,7 +47,7 @@ function solution = pixelFit(xdata, ydata, mode)
             case 'T1'
                 solution(:,i) = lsqcurvefit( @objectiveFunctionT1, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
             case 'T2'
-                solution(:,i) = lsqcurvefit( @pixelT2Decay, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+                solution(:,i) = lsqcurvefit( @objectiveFunctionT2, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
         end
 
     end

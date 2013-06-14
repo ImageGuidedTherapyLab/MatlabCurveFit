@@ -6,6 +6,7 @@ clear all;
 close all;
 
 % Add algorithms.
+addpath('algorithms/objectiveFunctions/');
 addpath('algorithms/pixel/');
 addpath('algorithms/vector/');
 addpath('algorithms/vectorChunks/');
