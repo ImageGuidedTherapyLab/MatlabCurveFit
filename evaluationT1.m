@@ -1,4 +1,4 @@
-%% Evaluation script, T2 decay fitting.
+%% Evaluation script, T1 recovery fitting.
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
 
