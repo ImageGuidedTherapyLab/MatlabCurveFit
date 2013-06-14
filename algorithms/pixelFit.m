@@ -8,11 +8,11 @@ function solution = pixelFit(xdata, ydata, objectiveFunction, solution, bounds)
 
     % Get size of data.
     dataSize = size(ydata);
-    numberOfPixels = dataSize(1)*dataSize(2);
-    numberOfEchos  = dataSize(3);
+    numberOfPixels  = dataSize(1)*dataSize(2);
+    numberOfSamples = dataSize(3);
         
     % Reshape.
-    ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
+    ydata = reshape(ydata, [numberOfPixels, numberOfSamples]);
 
     % Bounds.
     lowerBounds(1) = bounds(1,1);
@@ -23,13 +23,8 @@ function solution = pixelFit(xdata, ydata, objectiveFunction, solution, bounds)
     % Loop over pixels.
     parfor i = 1:numberOfPixels
 
-        echoTimes = xdata;
-        echoData  = ydata(i,:);
-
-        x0 = solution(:,i);
-        
         % Fitting.
-        solution(:,i) = lsqcurvefit(objectiveFunction, x0, echoTimes, echoData, lowerBounds, upperBounds, options);
+        solution(:,i) = lsqcurvefit(objectiveFunction, solution(:,i), xdata, ydata(i,:), lowerBounds, upperBounds, options);
  
     end
 

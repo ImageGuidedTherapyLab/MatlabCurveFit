@@ -8,11 +8,11 @@ function solution = vectorFit(xdata, ydata, objectiveFunction, solution, bounds)
     
     % Get size of data.
     dataSize = size(ydata);
-    numberOfPixels = dataSize(1)*dataSize(2);
-    numberOfEchos  = dataSize(3);
+    numberOfPixels  = dataSize(1)*dataSize(2);
+    numberOfSamples = dataSize(3);
     
     % Reshape.
-    ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
+    ydata = reshape(ydata, [numberOfPixels, numberOfSamples]);
 
     % Bounds.
     lowerBounds = ones(2, numberOfPixels);
