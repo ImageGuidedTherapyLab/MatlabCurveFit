@@ -3,30 +3,26 @@
 
 function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, inversionTimes )
 
-    % Get number of inversion times.
+    %% Initialize.
+    % Get number of inversion times, parameters, and pixels.
     numberOfInversionTimes = size(inversionTimes,1);
+    numberOfParameters     = size(solutionParameters,1);
+    numberOfPixels         = size(solutionParameters,2);
 
-    % Reshape inversion times vector.
-    inversionTimes = reshape(inversionTimes, [1,numberOfInversionTimes]);
-
-    % Get number of pixels.
-    numberOfPixels = size(solutionParameters,2);
-    
-    % Objective function values at Solution
-    modelVector = zeros(numberOfPixels, numberOfInversionTimes);
-
-    % Extract model parameters.
-    numberOfParameters = size(solutionParameters,1);
+    % Get each model parameter set.
     amplitudes = solutionParameters(1,:);
     t1Times    = solutionParameters(2,:);
 
-    % Build array of model predicted values
-    for i = 1:numberOfInversionTimes
-        inversionTime = inversionTimes(i);
-        modelVector(:,i) = amplitudes .* abs(1 - 2.*exp(-inversionTime ./ t1Times));
+    %% Evaluate objective function.
+    % Initalize vector.
+    modelVector = zeros(numberOfPixels, numberOfInversionTimes);
+
+    % Build array of model predicted values.
+    for inversionIndex = 1:numberOfInversionTimes
+        modelVector(:,inversionIndex) = amplitudes .* abs(1 - 2.*exp(-inversionTimes(inversionIndex) ./ t1Times));
     end
 
-    % Calculate Jacobian matrix.
+    %% Calculate Jacobian matrix.
     if nargout > 1
         
         % Initialize Jacobian of the function.
