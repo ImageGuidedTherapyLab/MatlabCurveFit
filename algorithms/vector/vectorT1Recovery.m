@@ -7,7 +7,7 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
     numberOfInversionTimes = size(inversionTimes,1);
 
     % Reshape inversion times vector.
-    inversionTimes = reshape(inversionTimes, [numberOfInversionTimes,1]);
+    inversionTimes = reshape(inversionTimes, [1,numberOfInversionTimes]);
 
     % Get number of pixels.
     numberOfPixels = size(solutionParameters,2);
@@ -25,7 +25,7 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
         inversionTime = inversionTimes(i);
         modelVector(:,i) = amplitudes .* abs(1 - 2.*exp(-inversionTime ./ t1Times));
     end
-    
+
     % Calculate Jacobian matrix.
     if nargout > 1
         
@@ -45,10 +45,10 @@ function [ modelVector, modelJacobian ] = vectorT1Recovery( solutionParameters, 
         end
         
         % create sparse uncouple matrix
-        [~,SparseRow] = meshgrid([1:numberOfParameters],[1:numberOfRows]);
-        TmpCol = reshape([1:numberOfParameters*numberOfPixels],numberOfParameters,numberOfPixels);
-        SparseCol = repmat(TmpCol,numberOfInversionTimes,1);
-        modelJacobian = sparse(SparseRow(:),SparseCol(:),derivativeMatrix(:),numberOfRows,numberOfParameters*numberOfPixels);
+        [~,sparseRow] = meshgrid(1:numberOfParameters, 1:numberOfRows);
+        tmpCol = reshape(1:(numberOfParameters*numberOfPixels),numberOfPixels,numberOfParameters);
+        sparseCol = repmat(tmpCol,numberOfInversionTimes,1);
+        modelJacobian = sparse(sparseRow(:),sparseCol(:),derivativeMatrix(:),numberOfRows,numberOfParameters*numberOfPixels);
         
     end
 
