@@ -13,7 +13,7 @@ addpath('algorithms/vectorChunks/');
 % Load data.
 data = load('data/dataT1.mat');
 ydata = double(data.images(100:150,130:150,:));
-xdata = data.inversionTimes;
+xdata = double(data.inversionTimes);
 
 % Create pool for parallel processing.
 if matlabpool('size') == 0
@@ -42,4 +42,4 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-plotRecovery(10,30,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotRecovery(10,10,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);

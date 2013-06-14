@@ -22,17 +22,17 @@ end
 
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata);
+solutionPixel = pixelFit(xdata, ydata, 'T2');
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata);
+solutionVector = vectorFit(xdata, ydata, 'T2');
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata);
+solutionVectorChunks = vectorChunksFit(xdata, ydata, 'T2');
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
