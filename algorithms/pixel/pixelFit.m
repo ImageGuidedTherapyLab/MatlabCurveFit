@@ -4,7 +4,7 @@
 function solution = pixelFit(xdata, ydata, mode)
 
     % Set options for fit.
-    options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 40, 'MaxFunEvals', 40, 'TolFun', 1e-3 );
+    options = optimset('display', 'off', 'jacobian', 'on' );
 
     % Get size of data.
     dataSize = size(ydata);

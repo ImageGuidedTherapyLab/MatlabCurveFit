@@ -22,14 +22,14 @@ function [ modelVector, modelJacobian ] = pixelT1Recovery( solutionParameters, i
         
         % Jacobian of the function evaluated for solution parameters.
         amplitudePartialDerivatives = abs(1 - 2*exp(-inversionTimes / t1));
-        t1PartialDerivatives        = sign(1 - 2*exp(-inversionTimes / t1)) .* amplitude .* (1 - 2*exp(-inversionTimes / t1)) .* (-2*exp(-inversionTimes / t1)) .* (inversionTimes ./ t1^2);
+        t1PartialDerivatives        = sign(1 - 2*exp(-inversionTimes ./ t1)) .* amplitude .* (1 - 2*exp(-inversionTimes / t1)) .* (-2*exp(-inversionTimes / t1)) .* (inversionTimes ./ t1^2);
         derivativeMatrix = [ amplitudePartialDerivatives t1PartialDerivatives ];
         
         % Create sparse uncouple matrix
         [~, sparseRow] = meshgrid(1:numberOfParameters, 1:numberOfInversionTimes);
         sparseCol = repmat(1:numberOfParameters, numberOfInversionTimes, 1);
         modelJacobian = sparse(sparseRow(:), sparseCol(:), derivativeMatrix(:), numberOfInversionTimes, numberOfParameters);
-        
+
     end
     
 end
