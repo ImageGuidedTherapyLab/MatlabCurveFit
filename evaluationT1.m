@@ -31,14 +31,14 @@ solutionVector = vectorFit(xdata, ydata, 'T1');
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
-%tic();
-%solutionVectorChunks = vectorChunksFit(xdata, ydata, 'T1');
-%processingTimeVectorChunks = toc();
+tic();
+solutionVectorChunks = vectorChunksFit(xdata, ydata, 'T1');
+processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
 fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
-%fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
+fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
 
 
 % Plot results.

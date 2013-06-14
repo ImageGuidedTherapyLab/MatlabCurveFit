@@ -11,9 +11,16 @@ function solution = pixelFit(xdata, ydata, mode)
     numberOfPixels = dataSize(1)*dataSize(2);
     numberOfEchos  = dataSize(3);
 
-    % Reshape to avoid nested for-loops.
+    % Guess inital parameters.
+    initialAmplitude  = max(ydata,[],3);
+    [~,minimaIndices] = min(ydata,[],3);
+    initialT1         = xdata(minimaIndices);
+
+    % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
-    solution = ones(2, numberOfPixels);
+    initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
+    initialT1 = reshape(initialT1, [1, numberOfPixels]);
+    solution = [ initialAmplitude; initialT1 ];
 
     % Bounds for amplitude
     lowerBounds(1) = 0;

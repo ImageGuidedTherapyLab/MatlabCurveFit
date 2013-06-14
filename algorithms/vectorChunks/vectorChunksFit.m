@@ -1,19 +1,26 @@
 % Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
 % Authors: David Fuentes, Florian Maier
 
-function solution = vectorChunksFit(xdata, ydata)
+function solution = vectorChunksFit(xdata, ydata, mode)
 
     % Set options for fit.
-    options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 100, 'MaxFunEvals', 100, 'TolFun', 1e-5);
+    options = optimset('display', 'off', 'jacobian', 'on', 'MaxIter', 100, 'MaxFunEvals', 100, 'TolFun', 1e-7);
     
     % Get size of data.
     dataSize = size(ydata);
     numberOfPixels = dataSize(1)*dataSize(2);
     numberOfEchos  = dataSize(3);
 
-    % Reshape to only one dimension for pixels.
+    % Guess inital parameters.
+    initialAmplitude  = max(ydata,[],3);
+    [~,minimaIndices] = min(ydata,[],3);
+    initialT1         = xdata(minimaIndices);
+
+    % Reshape.
     ydata = reshape(ydata, [numberOfPixels, numberOfEchos]);
-    solution = ones(2, numberOfPixels);
+    initialAmplitude = reshape(initialAmplitude, [1, numberOfPixels]);
+    initialT1 = reshape(initialT1, [1, numberOfPixels]);
+    solution = [ initialAmplitude; initialT1 ];
 
     % Bounds.
     upperBounds = ones(2, numberOfPixels);
@@ -39,8 +46,12 @@ function solution = vectorChunksFit(xdata, ydata)
         solutionChunk{thread} = solution(:,firstPixel:lastPixel);
         
          % Fitting.
-        solutionChunk{thread} = lsqcurvefit(@vectorT2Decay, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
-        
+         switch (mode)
+             case 'T1'
+                solutionChunk{thread} = lsqcurvefit(@vectorT1Recovery, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
+             case 'T2'
+                solutionChunk{thread} = lsqcurvefit(@vectorT2Decay, solutionChunk{thread}, xdata, ydataChunk{thread}, lowerBoundsChunk{thread}, upperBoundsChunk{thread}, options);
+         end
     end
     
     % Combine results.
