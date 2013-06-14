@@ -30,7 +30,7 @@ function solution = vectorChunksFit(xdata, ydata, mode)
     % Bounds.
     upperBounds = ones(2, numberOfPixels);
     upperBounds(1,:) = 4096 * upperBounds(1,:);
-    upperBounds(2,:) = 1500 * upperBounds(2,:);
+    upperBounds(2,:) = 5000 * upperBounds(2,:);
     lowerBounds = zeros(2, numberOfPixels);
     
     % Get number of threads.
