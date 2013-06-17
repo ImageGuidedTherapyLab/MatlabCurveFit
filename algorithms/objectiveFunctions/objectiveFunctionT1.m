@@ -25,38 +25,37 @@ function [ modelVector, modelJacobian ] = objectiveFunctionT1( solutionParameter
     %% Calculate Jacobian matrix.
     if nargout > 1
         
-        % Initialize Jacobian of the function.
-        modelJacobian = sparse([], [], [], numberOfPixels*numberOfInversionTimes, numberOfPixels*numberOfParameters, numberOfPixels*numberOfInversionTimes*numberOfParameters);
-
+        % Initialize vectors for Jacobian of the function.
+        jacobianRowIndices = zeros(1,numberOfPixels*numberOfInversionTimes*numberOfParameters);
+        jacobianColIndices = zeros(1,numberOfPixels*numberOfInversionTimes*numberOfParameters);
+        jacobianEntries    = zeros(1,numberOfPixels*numberOfInversionTimes*numberOfParameters);
+        i = 1;
+        
         for pixelIndex = 1:numberOfPixels
             
             for inversionIndex = 1:numberOfInversionTimes
                 
-                % Index of function components that will be evaluated. The
-                % number of function components is the number of pixels
-                % times the number of different inversion times.
-                dataIndex = (inversionIndex-1)*numberOfPixels + pixelIndex;
-                
-                % Index of derivative variables. The number of derivative
-                % variables are the number of pixels times the number of
-                % fitting parameters. For each function component only one
-                % pixel needs to be evaluated. Therefore, the number of
-                % calculated derivatives per column equals the number of
-                % fitting parameters.
-                
                 % Parameter 1: Amplitude
                 parameterIndex = 1;
-                funcIndex = (pixelIndex-1)*numberOfParameters + parameterIndex;
-                modelJacobian(dataIndex, funcIndex) = abs(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex)));
+                jacobianRowIndices(i)   = (inversionIndex-1)*numberOfPixels + pixelIndex;
+                jacobianColIndices(i)   = (pixelIndex-1)*numberOfParameters + parameterIndex;
+                jacobianEntries(i)      = abs(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex)));
                 
                 % Parameter 2: T1
                 parameterIndex = 2;
-                funcIndex = (pixelIndex-1)*numberOfParameters + parameterIndex;
-                modelJacobian(dataIndex, funcIndex) = sign(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * amplitudes(pixelIndex) * (1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (-2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (inversionTimes(inversionIndex) / t1Times(pixelIndex)^2);
+                jacobianRowIndices(i+1) = (inversionIndex-1)*numberOfPixels + pixelIndex;
+                jacobianColIndices(i+1) = (pixelIndex-1)*numberOfParameters + parameterIndex;
+                jacobianEntries(i+1)    = sign(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * amplitudes(pixelIndex) * (1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (-2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (inversionTimes(inversionIndex) / t1Times(pixelIndex)^2);
+                
+                % Update Jacobian indices index.
+                i = i + 2;
                 
             end
             
         end
+
+        % Create sparse matrix.
+        modelJacobian = sparse(jacobianRowIndices, jacobianColIndices, jacobianEntries);
         
     end
 

@@ -13,7 +13,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT2.mat');
-ydata = double(data.image(50:60,30:40,:));
+ydata = double(data.image);
 xdata = data.EchoTime';
 
 % Create pool for parallel processing.
@@ -31,7 +31,8 @@ bounds = [ 0, 4096; 0, 2500 ];
 
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
+%solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
+solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
 processingTimePixel = toc();
 
 % Vector curve fit.
@@ -51,4 +52,7 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-plotDecay(5,5,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotDecay(90,128,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Liver
+plotDecay(40,103,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Fat
+plotDecay(134,143,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);   % Aorta
+plotDecay(231,132,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);   % Muscle

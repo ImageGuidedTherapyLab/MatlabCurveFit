@@ -13,7 +13,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT1.mat');
-ydata = double(data.images(100:110,130:140,:));
+ydata = double(data.images(100:110,150:160,:));
 xdata = double(data.inversionTimes);
 
 % Create pool for parallel processing.
@@ -36,17 +36,17 @@ bounds = [ 0, 4096; 0, 5000 ];
 
 % Pixel-by-pixel curve fit.
 tic();
-solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1opt, initalGuess, bounds);
 processingTimePixel = toc();
 
 % Vector curve fit.
 tic();
-solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
+solutionVector = vectorFit(xdata, ydata, @objectiveFunctionT1opt, initalGuess, bounds);
 processingTimeVector = toc();
 
 % Vector chunks curve fit.
 tic();
-solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
+solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1opt, initalGuess, bounds);
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
@@ -56,4 +56,5 @@ fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingT
 
 
 % Plot results.
-plotRecovery(5,5,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+%plotRecovery(137,104,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotRecovery(1,1,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
