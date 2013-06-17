@@ -26,7 +26,8 @@ dataSize = size(ydata);
 numberOfPixels = dataSize(1)*dataSize(2);
 initialAmplitude  = max(ydata,[],3);
 [~,minimaIndices] = min(ydata,[],3);
-initialT1         = xdata(minimaIndices) ./ (1-exp(1));
+initialT1         = xdata(minimaIndices);
+initialT1         = initialT1 ./ (1-1/exp(1));
 initialAmplitude  = reshape(initialAmplitude, [1, numberOfPixels]);
 initialT1 = reshape(initialT1, [1, numberOfPixels]);
 initialGuess = [ initialAmplitude; initialT1 ];
@@ -36,8 +37,9 @@ bounds = [ 0, 4096; 0, 15000 ];
 
 % Pixel-by-pixel curve fit.
 tic();
-%solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initalGuess, bounds);
-solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
+%solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT1, initialGuess, bounds);
+%solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
+solutionPixel = chrisT1Fit(xdata, ydata, initialGuess);
 processingTimePixel = toc();
 
 % Vector curve fit.
@@ -51,7 +53,7 @@ solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT1, initi
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
-%fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
+fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
 fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
 

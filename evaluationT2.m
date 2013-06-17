@@ -32,7 +32,8 @@ bounds = [ 0, 4096; 0, 2500 ];
 % Pixel-by-pixel curve fit.
 tic();
 %solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
-solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
+%solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
+solutionPixel = chrisT2Fit(xdata, ydata);
 processingTimePixel = toc();
 
 % Vector curve fit.
@@ -46,7 +47,7 @@ solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initi
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
-%fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
+fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
 fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
 
