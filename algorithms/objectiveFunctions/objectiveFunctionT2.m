@@ -18,8 +18,14 @@ function [ modelVector, modelJacobian ] = objectiveFunctionT2( solutionParameter
     modelVector = zeros(numberOfPixels, numberOfEchos);
 
     % Build array of model predicted values.
-    for echoIndex = 1:numberOfEchos
-        modelVector(:,echoIndex) = amplitudes .* exp(-echoTimes(echoIndex) ./ t2Times);
+    for pixelIndex = 1:numberOfPixels
+        
+        for echoIndex = 1:numberOfEchos
+            
+            modelVector(pixelIndex,echoIndex) = amplitudes(pixelIndex) * exp(-echoTimes(echoIndex) / t2Times(pixelIndex));
+        
+        end
+        
     end
 
     %% Calculate Jacobian matrix.

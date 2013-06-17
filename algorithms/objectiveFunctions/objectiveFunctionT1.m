@@ -18,8 +18,14 @@ function [ modelVector, modelJacobian ] = objectiveFunctionT1( solutionParameter
     modelVector = zeros(numberOfPixels, numberOfInversionTimes);
 
     % Build array of model predicted values.
-    for inversionIndex = 1:numberOfInversionTimes
-        modelVector(:,inversionIndex) = amplitudes .* abs(1 - 2.*exp(-inversionTimes(inversionIndex) ./ t1Times));
+    for pixelIndex = 1:numberOfPixels
+        
+        for inversionIndex = 1:numberOfInversionTimes
+            
+            modelVector(pixelIndex,inversionIndex) = amplitudes(pixelIndex) * abs(1 - 2 * exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex)));
+        
+        end
+        
     end
 
     %% Calculate Jacobian matrix.
