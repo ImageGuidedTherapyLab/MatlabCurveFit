@@ -46,7 +46,7 @@ solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initi
 processingTimeVectorChunks = toc();
 
 fprintf('Processing times:\n');
-fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
+%fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
 fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
 
