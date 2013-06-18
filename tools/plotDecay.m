@@ -16,7 +16,6 @@ function plotDecay( x, y, xdata, ydata, solutionPixel, solutionVector, solutionV
     colormap gray;
     xlabel('x / px');
     ylabel('y / px');
-    caxis([0 800]);
     h = colorbar;
     set(get(h,'ylabel'),'String', 'signal magnitude / a.u.');
     hold on;

@@ -17,7 +17,6 @@ function plotRecovery(x,y,xdata,ydata,solutionPixel,solutionVector,solutionVecto
     colormap gray;
     xlabel('x / px');
     ylabel('y / px');
-    caxis([0 800]);
     h = colorbar;
     set(get(h,'ylabel'),'String', 'signal magnitude / a.u.');
     hold on;
@@ -29,10 +28,10 @@ function plotRecovery(x,y,xdata,ydata,solutionPixel,solutionVector,solutionVecto
          t, func( t, solutionPixel(:,pixel(1),pixel(2)) ), 'r-', ...
          t, func( t, solutionVector(:,pixel(1),pixel(2)) ),'g-', ...
          t, func( t, solutionVectorChunks(:,pixel(1),pixel(2)) ),'b--')
-    title(sprintf('T_1 decay at pixel (%d/%d)', x, y));
+    title(sprintf('T_1 recovery at pixel (%d/%d)', x, y));
     xlabel('echo time / ms');
     ylabel('signal / a.u.');
-    legend('measurement', 'pixel-by-pixel fit', 'simultaneous fit', 'piecewise simultaneous fit');
+    legend('measurement', 'pixel-by-pixel fit', 'simultaneous fit', 'piecewise simultaneous fit', 'Location', 'SouthEast');
     snapnow;
     
     % RMSE calculations.
