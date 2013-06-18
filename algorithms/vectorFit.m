@@ -4,7 +4,7 @@
 function solution = vectorFit(xdata, ydata, objectiveFunction, solution, bounds)
 
     % Set options for fit.
-    options = optimset('display', 'iter', 'jacobian', 'on');
+    options = optimset('display', 'off', 'jacobian', 'on');
     
     % Get size of data.
     dataSize = size(ydata);

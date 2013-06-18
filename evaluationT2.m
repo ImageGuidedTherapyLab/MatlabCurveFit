@@ -1,6 +1,4 @@
 %% Evaluation script, T2 decay fitting.
-% Copyright (c) The University of Texas MD Anderson Cancer Center, 2013
-% Authors: David Fuentes, Florian Maier
 
 % Reset MATLAB environment.
 clear all;
@@ -46,11 +44,76 @@ tic();
 solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimeVectorChunks = toc();
 
-fprintf('Processing times:\n');
-fprintf('   pixel-by-pixel, parfor:                     % 4.2f s\n', processingTimePixel);
-fprintf('   vector, simultaneous fit:                   % 4.2f s\n', processingTimeVector);
-fprintf('   vector chunks, piecewise simultaneous fit:  % 4.2f s\n', processingTimeVectorChunks);
+figure;
+imagesc(ydata(:,:,1));
+title('magnitude image');
+colormap gray;
+xlabel('x / px');
+ylabel('y / px');
+caxis([0 800]);
+h = colorbar;
+set(get(h,'ylabel'),'String', 'signal magnitude / a.u.');
+snapnow;
 
+fprintf('Processing times:\n');
+fprintf('   pixel-by-pixel, parfor:                    % 7.2f s\n', processingTimePixel);
+fprintf('   vector, simultaneous fit:                  % 7.2f s\n', processingTimeVector);
+fprintf('   vector chunks, piecewise simultaneous fit: % 7.2f s\n', processingTimeVectorChunks);
+
+figure;
+imagesc(squeeze(solutionPixel(2,:,:)));
+title('T_2 map (pixel-by-pixel, parfor)');
+colormap jet;
+xlabel('x / px');
+ylabel('y / px');
+caxis([0 100]);
+h = colorbar;
+set(get(h,'ylabel'),'String', 'T2 / ms');
+snapnow;
+
+echoTimes  = repmat( reshape( xdata, [1 1 12]), [256 256 1]);
+amplitudes = repmat( reshape( solutionPixel(1,:,:), [256 256 1]), [1 1 12]);
+t2times    = repmat( reshape( solutionPixel(2,:,:), [256 256 1]), [1 1 12]);
+
+valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
+error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
+fprintf('RMSE = %.3f', error);
+
+figure;
+imagesc(squeeze(solutionVector(2,:,:)));
+title('T_2 map (vector, simultaneous fit)');
+colormap jet;
+xlabel('x / px');
+ylabel('y / px');
+caxis([0 100]);
+h = colorbar;
+set(get(h,'ylabel'),'String', 'T2 / ms');
+snapnow;
+
+amplitudes = repmat( reshape( solutionVector(1,:,:), [256 256 1]), [1 1 12]);
+t2times    = repmat( reshape( solutionVector(2,:,:), [256 256 1]), [1 1 12]);
+
+valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
+error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
+fprintf('RMSE = %.3f', error);
+
+figure;
+imagesc(squeeze(solutionVectorChunks(2,:,:)));
+title('T_2 map (vector chunks, piecewise simultaneous fit)');
+colormap jet;
+xlabel('x / px');
+ylabel('y / px');
+caxis([0 100]);
+h = colorbar;
+set(get(h,'ylabel'),'String', 'T2 / ms');
+snapnow;
+
+amplitudes = repmat( reshape( solutionVectorChunks(1,:,:), [256 256 1]), [1 1 12]);
+t2times    = repmat( reshape( solutionVectorChunks(2,:,:), [256 256 1]), [1 1 12]);
+
+valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
+error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
+fprintf('RMSE = %.3f', error);
 
 % Plot results.
 plotDecay(90,128,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Liver
