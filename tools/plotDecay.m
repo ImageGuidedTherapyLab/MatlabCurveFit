@@ -3,13 +3,18 @@
 % Authors: David Fuentes, Florian Maier
 function plotDecay( x, y, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks )
 
+    % Calculate RMSE for this pixel.
+    pixel    = [ x, y ];
+    measured = squeeze( ydata( pixel(1), pixel(2), : ));
+    t        = 0:1.1*max(xdata);
+    func     = @(t,param) param(1) * exp( - t ./ param(2));
+    
     % Plot results.
-    pixel = [x,y];
     figure;
-    plot(xdata,squeeze(ydata(pixel(1),pixel(2),:)),'k+',...
-         1:max(xdata),solutionPixel(1,pixel(1),pixel(2))* exp(-[1:max(xdata)]/solutionPixel(2,pixel(1),pixel(2))),'r-',...
-         1:max(xdata),solutionVector(1,pixel(1),pixel(2))* exp(-[1:max(xdata)]/solutionVector(2,pixel(1),pixel(2))),'g-',...
-         1:max(xdata),solutionVectorChunks(1,pixel(1),pixel(2))* exp(-[1:max(xdata)]/solutionVectorChunks(2,pixel(1),pixel(2))),'b--')
+    plot(xdata,measured,'k+',...
+         t, func( t, solutionPixel(:,pixel(1),pixel(2)) ), 'r-', ...
+         t, func( t, solutionVector(:,pixel(1),pixel(2)) ),'g-',...
+         t, func( t, solutionVectorChunks(:,pixel(1),pixel(2)) ),'b--')
     title(sprintf('T_2 Decay at Pixel (%d/%d)', x, y));
     xlabel('echo time / ms');
     ylabel('signal / a.u.');
