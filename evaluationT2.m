@@ -50,7 +50,6 @@ title('magnitude image');
 colormap gray;
 xlabel('x / px');
 ylabel('y / px');
-caxis([0 800]);
 h = colorbar;
 set(get(h,'ylabel'),'String', 'signal magnitude / a.u.');
 snapnow;
@@ -71,9 +70,9 @@ h = colorbar;
 set(get(h,'ylabel'),'String', 'T2 / ms');
 snapnow;
 
-echoTimes  = repmat( reshape( xdata, [1 1 12]), [256 256 1]);
-amplitudes = repmat( reshape( solutionPixel(1,:,:), [256 256 1]), [1 1 12]);
-t2times    = repmat( reshape( solutionPixel(2,:,:), [256 256 1]), [1 1 12]);
+echoTimes  = repmat( reshape( xdata, [1 1 12]), [size(ydata,1) size(ydata,2) 1]);
+amplitudes = repmat( reshape( solutionPixel(1,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
+t2times    = repmat( reshape( solutionPixel(2,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
@@ -90,8 +89,8 @@ h = colorbar;
 set(get(h,'ylabel'),'String', 'T2 / ms');
 snapnow;
 
-amplitudes = repmat( reshape( solutionVector(1,:,:), [256 256 1]), [1 1 12]);
-t2times    = repmat( reshape( solutionVector(2,:,:), [256 256 1]), [1 1 12]);
+amplitudes = repmat( reshape( solutionVector(1,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
+t2times    = repmat( reshape( solutionVector(2,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
@@ -108,8 +107,8 @@ h = colorbar;
 set(get(h,'ylabel'),'String', 'T2 / ms');
 snapnow;
 
-amplitudes = repmat( reshape( solutionVectorChunks(1,:,:), [256 256 1]), [1 1 12]);
-t2times    = repmat( reshape( solutionVectorChunks(2,:,:), [256 256 1]), [1 1 12]);
+amplitudes = repmat( reshape( solutionVectorChunks(1,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
+t2times    = repmat( reshape( solutionVectorChunks(2,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );

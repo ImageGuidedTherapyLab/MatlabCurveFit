@@ -21,7 +21,7 @@ function solution = chrisT1Fit(xdata, ydata, solution)
         try
             solution(:,i) = nlinfit( xdata', squeeze(double(ydata(i,:))), t1sig, solution(:,i) );
         catch exception
-            fprintf('error: %s', exception.message);
+            %fprintf('error: %s', exception.message);
             solution(:,i) = zeros(1,2);
         end
  
