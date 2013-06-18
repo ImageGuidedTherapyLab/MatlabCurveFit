@@ -11,14 +11,27 @@ function plotDecay( x, y, xdata, ydata, solutionPixel, solutionVector, solutionV
     
     % Plot results.
     figure;
+    imagesc(ydata(:,:,1));
+    title('magnitude image');
+    colormap gray;
+    xlabel('x / px');
+    ylabel('y / px');
+    caxis([0 800]);
+    h = colorbar;
+    set(get(h,'ylabel'),'String', 'signal magnitude / a.u.');
+    hold on;
+    plot( x, y, 'y+', 'MarkerSize', 10);
+    snapnow;
+    
+    figure;
     plot(xdata ,measured, 'k+',...
          t, func( t, solutionPixel(:,pixel(1),pixel(2)) ), 'r-', ...
          t, func( t, solutionVector(:,pixel(1),pixel(2)) ),'g-', ...
          t, func( t, solutionVectorChunks(:,pixel(1),pixel(2)) ),'b--')
-    title(sprintf('T_2 Decay at Pixel (%d/%d)', x, y));
+    title(sprintf('T_2 decay at pixel (%d/%d)', x, y));
     xlabel('echo time / ms');
     ylabel('signal / a.u.');
-    legend('measurement', 'pixel-by-pixel fit', 'vector fit', 'block fit');
+    legend('measurement', 'pixel-by-pixel fit', 'simultaneous fit', 'piecewise simultaneous fit');
     snapnow;
     
     % RMSE calculations.

@@ -4,7 +4,7 @@
 function solution = vectorChunksFit(xdata, ydata, objectiveFunction, solution, bounds)
 
     % Set options for fit.
-    options = optimset('display', 'off', 'jacobian', 'on');
+    options = optimset('display', 'off', 'jacobian', 'on', 'TolFun', 1e-5);
     
     % Get size of data.
     dataSize = size(ydata);
