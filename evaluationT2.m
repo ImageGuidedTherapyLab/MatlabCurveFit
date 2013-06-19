@@ -11,7 +11,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT2.mat');
-ydata = double(data.image);
+ydata = double(data.image(100:179,50:129,:));
 xdata = data.EchoTime';
 
 % Create pool for parallel processing.
@@ -115,7 +115,7 @@ error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2tim
 fprintf('RMSE = %.3f', error);
 
 % Plot results.
-plotDecay(90,128,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Liver
-plotDecay(40,103,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Fat
-plotDecay(134,143,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);   % Aorta
-plotDecay(231,132,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);   % Muscle
+plotDecay( 26, 61, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Liver
+plotDecay(  5, 78, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Fat
+plotDecay( 80, 45, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Aorta
+plotDecay( 73, 59, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Bone

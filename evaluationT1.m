@@ -11,7 +11,7 @@ addpath('algorithms/objectiveFunctions/');
 
 % Load data.
 data = load('data/dataT1.mat');
-ydata = double(data.images);
+ydata = double(data.images(50:199,50:199,:));
 xdata = double(data.inversionTimes);
 
 % Create pool for parallel processing.
@@ -121,8 +121,8 @@ error = rmse( ydata(valid), amplitudes(valid) .* exp( -inversionTimes(valid) ./ 
 fprintf('RMSE = %.3f', error);
 
 % Plot results.
-plotRecovery(107,111,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);    % Water
-plotRecovery(97,85,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
-plotRecovery(136,129,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
-plotRecovery(135,85,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
-plotRecovery(180,49,xdata,ydata,solutionPixel,solutionVector,solutionVectorChunks);
+plotRecovery(  40, 100, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks );
+plotRecovery(  26,  34, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks );
+plotRecovery(  88,  79, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks );
+plotRecovery(  88, 120, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks );
+plotRecovery( 129,  35, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks );
