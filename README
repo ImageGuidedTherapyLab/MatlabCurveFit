@@ -9,10 +9,27 @@ Florian Maier
 Results
 -------
 
-Starting matlabpool using the 'local' configuration ... connected to 8 labs.
+System:
+   MATLAB R2013a (8.1.0.604) 64-bit (glnxa64)
+   8x Intel Xeon CPU E5640 @ 2.67GHz
 
-Processing times:
-   pixel-by-pixel, parfor:                      120.30 s
-   vector, simultaneous fit:                    16.01 s
-   vector chunks, piecewise simultaneous fit:   2.40 s
+T1 processing times (256 x 256 px):
+   pixel-by-pixel, parfor:                      78.17 s
+   vector, simultaneous fit:                    65.08 s
+   vector chunks, piecewise simultaneous fit:   34.78 s
+   
+T2 processing times (256 x 256 px):
+   pixel-by-pixel, parfor:                      12.05 s
+   vector, simultaneous fit:                   104.71 s
+   vector chunks, piecewise simultaneous fit:    5.12 s
+   
+T1 processing times (ROI, 150 x 150 px):
+   pixel-by-pixel, parfor:                      29.93 s
+   vector, simultaneous fit:                   165.41 s
+   vector chunks, piecewise simultaneous fit:    7.94 s
+   
+T2 processing times (ROI, 80 x 80 px):
+   pixel-by-pixel, parfor:                       1.29 s
+   vector, simultaneous fit:                     1.49 s
+   vector chunks, piecewise simultaneous fit:    0.67 s
 
