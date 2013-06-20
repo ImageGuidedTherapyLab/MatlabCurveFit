@@ -51,7 +51,7 @@ function [ modelVector, modelJacobian ] = objectiveFunctionT1( solutionParameter
                 parameterIndex = 2;
                 jacobianRowIndices(i+1) = (inversionIndex-1)*numberOfPixels + pixelIndex;
                 jacobianColIndices(i+1) = (pixelIndex-1)*numberOfParameters + parameterIndex;
-                jacobianEntries(i+1)    = sign(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * amplitudes(pixelIndex) * (1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (-2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * (inversionTimes(inversionIndex) / t1Times(pixelIndex)^2);
+                jacobianEntries(i+1)    = sign(1 - 2*exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex))) * amplitudes(pixelIndex) * -2 * exp(-inversionTimes(inversionIndex) / t1Times(pixelIndex)) * (inversionTimes(inversionIndex) / t1Times(pixelIndex)^2);
                 
                 % Update Jacobian indices index.
                 i = i + 2;
