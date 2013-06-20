@@ -28,11 +28,11 @@ function plotRecovery(x,y,xdata,ydata,solutionPixel,solutionVector,solutionVecto
          t, func( t, solutionPixel(:,pixel(1),pixel(2)) ), 'r-', ...
          t, func( t, solutionVector(:,pixel(1),pixel(2)) ),'g-', ...
          t, func( t, solutionVectorChunks(:,pixel(1),pixel(2)) ),'b--', ...
-         t, func( t, solutionChris(:,pixel(1),pixel(2)) ),'b--')
+         t, func( t, solutionChris(:,pixel(1),pixel(2)) ),'c-')
     title(sprintf('T_1 recovery at pixel (%d/%d)', x, y));
     xlabel('echo time / ms');
     ylabel('signal / a.u.');
-    legend('measurement', 'pixel-by-pixel fit', 'simultaneous fit', 'piecewise simultaneous fit', 'Location', 'SouthEast');
+    legend('measurement', 'pixel-by-pixel fit', 'simultaneous fit', 'piecewise simultaneous fit', 'Chris'' fit', 'Location', 'SouthEast');
     snapnow;
     
     % RMSE calculations.
