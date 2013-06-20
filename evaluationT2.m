@@ -29,9 +29,7 @@ bounds = [ 0, 4096; 0, 2500 ];
 
 % Pixel-by-pixel curve fit.
 tic();
-%solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
-%solutionPixel = reshape(initialGuess, [2, dataSize(1), dataSize(2)]);
-solutionPixel = chrisT2Fit(xdata, ydata);
+solutionPixel = pixelFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimePixel = toc();
 
 % Vector curve fit.
@@ -43,6 +41,11 @@ processingTimeVector = toc();
 tic();
 solutionVectorChunks = vectorChunksFit(xdata, ydata, @objectiveFunctionT2, initialGuess, bounds);
 processingTimeVectorChunks = toc();
+
+% Chris' curve fit.
+tic();
+solutionChris = chrisT2Fit(xdata, ydata);
+processingTimeChris = toc();
 
 figure;
 imagesc(ydata(:,:,1));
@@ -58,6 +61,7 @@ fprintf('Processing times:\n');
 fprintf('   pixel-by-pixel, parfor:                    % 7.2f s\n', processingTimePixel);
 fprintf('   vector, simultaneous fit:                  % 7.2f s\n', processingTimeVector);
 fprintf('   vector chunks, piecewise simultaneous fit: % 7.2f s\n', processingTimeVectorChunks);
+fprintf('   Chris'' way:                                % 7.2f s\n', processingTimeChris);
 
 figure;
 imagesc(squeeze(solutionPixel(2,:,:)));
@@ -76,7 +80,7 @@ t2times    = repmat( reshape( solutionPixel(2,:,:), [size(ydata,1) size(ydata,2)
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
-fprintf('RMSE = %.3f', error);
+fprintf('RMSE = %.3f\n', error);
 
 figure;
 imagesc(squeeze(solutionVector(2,:,:)));
@@ -94,7 +98,7 @@ t2times    = repmat( reshape( solutionVector(2,:,:), [size(ydata,1) size(ydata,2
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
-fprintf('RMSE = %.3f', error);
+fprintf('RMSE = %.3f\n', error);
 
 figure;
 imagesc(squeeze(solutionVectorChunks(2,:,:)));
@@ -112,10 +116,28 @@ t2times    = repmat( reshape( solutionVectorChunks(2,:,:), [size(ydata,1) size(y
 
 valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
 error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
-fprintf('RMSE = %.3f', error);
+fprintf('RMSE = %.3f\n', error);
+
+figure;
+imagesc(squeeze(solutionChris(2,:,:)));
+title('T_2 map (Chris'' method)');
+colormap jet;
+xlabel('x / px');
+ylabel('y / px');
+caxis([0 100]);
+h = colorbar;
+set(get(h,'ylabel'),'String', 'T2 / ms');
+snapnow;
+
+amplitudes = repmat( reshape( solutionChris(1,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
+t2times    = repmat( reshape( solutionChris(2,:,:), [size(ydata,1) size(ydata,2) 1]), [1 1 size(xdata,1)]);
+
+valid = ((~isnan(amplitudes)) & (~isnan(t2times)) & (amplitudes > 0) & (t2times > 0));
+error = rmse( ydata(valid), amplitudes(valid) .* exp( -echoTimes(valid) ./ t2times(valid)) );
+fprintf('RMSE = %.3f\n', error);
 
 % Plot results.
-plotDecay( 26, 61, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Liver
-plotDecay(  5, 78, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Fat
-plotDecay( 80, 45, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Aorta
-plotDecay( 73, 59, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks ); % Bone
+plotDecay( 26, 61, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks, solutionChris ); % Liver
+plotDecay(  5, 78, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks, solutionChris ); % Fat
+plotDecay( 80, 45, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks, solutionChris ); % Aorta
+plotDecay( 73, 59, xdata, ydata, solutionPixel, solutionVector, solutionVectorChunks, solutionChris ); % Bone
