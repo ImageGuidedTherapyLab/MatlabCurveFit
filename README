@@ -14,12 +14,22 @@ System:
    8x Intel Xeon CPU E5640 @ 2.67GHz
 
 T1 processing times (ROI, 150 x 150 px):
-   pixel-by-pixel, parfor:                     349.57 s
-   vector, simultaneous fit:                   170.38 s
-   vector chunks, piecewise simultaneous fit:    7.50 s
+   pixel-by-pixel, parfor:                      46.39 s
+   vector, simultaneous fit:                     5.78 s
+   vector chunks, piecewise simultaneous fit:    0.87 s
    
 T2 processing times (ROI, 80 x 80 px):
-   pixel-by-pixel, parfor:                      40.32 s
+   pixel-by-pixel, parfor:                      40.08 s
    vector, simultaneous fit:                     1.46 s
-   vector chunks, piecewise simultaneous fit:    0.38 s
+   vector chunks, piecewise simultaneous fit:    0.40 s
+
+T1 processing times (full image, 256 x 256 px):
+   pixel-by-pixel, parfor:                     112.31 s
+   vector, simultaneous fit:                    37.75 s
+   vector chunks, piecewise simultaneous fit:    4.00 s
+   
+T2 processing times (full image, 256 x 256 px):
+   pixel-by-pixel, parfor:                     375.24 s
+   vector, simultaneous fit:                    93.39 s
+   vector chunks, piecewise simultaneous fit:    4.94 s
 
